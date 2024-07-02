@@ -190,6 +190,12 @@ RSpec.describe Mysql2::Client do # rubocop:disable Metrics/BlockLength
       end
     end
 
+    it "should not raise error when option = { ssl_mode: :disabled }" do
+      expect do
+        new_client(option_overrides.slice(:host).merge(ssl_mode: :disable))
+      end.not_to raise_error
+    end
+
     it "should be able to connect via SSL options" do
       # You may need to adjust the lines below to match your SSL certificate paths
       results = Hash[ssl_client.query('SHOW STATUS WHERE Variable_name LIKE "Ssl_%"').map { |x| x.values_at('Variable_name', 'Value') }]
