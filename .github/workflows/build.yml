@@ -10,7 +10,7 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-#          - windows-2022
+          - windows-2022
 #          - macos-latest
         ruby:
 #          - 2.7
@@ -20,12 +20,11 @@ jobs:
 #          - 3.3
 #          - head
         mysql-version:
-#          - mysql-8.0
+          - mysql-8.0
           - mysql-5.7
           - mysql-5.6
-          - mysql-5.5
-#          - mariadb-10.11
-#          - mariadb-10.6
+          - mariadb-10.11
+          - mariadb-10.6
 
       # On the fail-fast: true, it cancels all in-progress jobs
       # if any matrix job fails, which we don't want.
