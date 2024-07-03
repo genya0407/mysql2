@@ -153,7 +153,6 @@ Make sure that the testing database '#{database}' exists. If it does not exist, 
           "test", "test", 'val1', 'val1,val2'
         )
       ]
-      client.query("CREATE DATABASE IF NOT EXISTS test")
     end
   end
 

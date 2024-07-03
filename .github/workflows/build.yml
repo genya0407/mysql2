@@ -59,4 +59,5 @@ jobs:
             password:
             database: mysql2_test
           EOS
+      - run: mysql -uroot -e 'CREATE DATABASE IF NOT EXISTS test'
       - run: bundle exec rake spec -- $rake_spec_opts
