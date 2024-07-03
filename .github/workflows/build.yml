@@ -10,15 +10,15 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - windows-2022
-#          - macos-latest
+#          - windows-2022
+          - macos-latest
         ruby:
-#          - 2.7
+          - "2.7"
           - "3.0"
-#          - 3.1
-#          - 3.2
-#          - 3.3
-#          - head
+          - "3.1"
+          - "3.2"
+          - "3.3"
+          - head
         mysql-version:
           - mysql-8.0
           - mysql-5.7
@@ -43,14 +43,13 @@ jobs:
           mysql-version: ${{ matrix.mysql-version }}
           user: mysql2_test
       - run: mysql -uroot -e 'CREATE DATABASE IF NOT EXISTS test'
+      - run: ln -s ${{ steps.setup-mysql.outputs.base-dir }}/tmp/mysql.sock /tmp/mysql.sock
 
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
-      - run: ln -s ${{ steps.setup-mysql.outputs.base-dir }}/tmp/mysql.sock /tmp/mysql.sock
-        if: ${{ matrix.os == 'ubuntu-latest' }}
       - run: bundle exec rake spec -- $rake_spec_opts
         env:
           USER: mysql2_test
