@@ -46,7 +46,7 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - run: |
-          echo <<EOS > spec/configuration.yml
+          cat <<EOS > spec/configuration.yml
           root:
             host: ${{ steps.setup-mysql.outputs.base-dir }}/tmp/mysql.sock
             username: root
