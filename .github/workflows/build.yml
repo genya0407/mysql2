@@ -36,11 +36,27 @@ jobs:
       HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1
     steps:
       - uses: actions/checkout@v4
-      - uses: shogo82148/actions-setup-mysql@v1
+      - id: setup-mysql
+        uses: shogo82148/actions-setup-mysql@v1
         with:
           mysql-version: ${{ matrix.mysql-version }}
+          user: mysql2_test
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - run: |
+          echo <<EOS > spec/configuration.yml
+          root:
+            host: ${{ steps.setup-mysql.outputs.base-dir }}/tmp/mysql.sock
+            username: root
+            password:
+            database: test
+          
+          user:
+            host: ${{ steps.setup-mysql.outputs.base-dir }}/tmp/mysql.sock
+            username: mysql2_test
+            password:
+            database: mysql2_test
+          EOS
       - run: bundle exec rake spec -- $rake_spec_opts
