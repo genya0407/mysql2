@@ -3,7 +3,7 @@ on: [push, pull_request]
 jobs:
   build:
     name: >-
-      ${{ matrix.os }} ruby ${{ matrix.ruby }} ${{ matrix.db }}
+      ${{ matrix.os }} ruby ${{ matrix.ruby }} ${{ matrix.mysql-version }}
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.allow-failure || false }}
     strategy:
