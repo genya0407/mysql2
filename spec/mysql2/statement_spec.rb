@@ -7,7 +7,7 @@ RSpec.describe Mysql2::Statement do
 
   let(:prepared_statements_instances_exist) do
     performance_schema = @client.query "SELECT 1 FROM information_schema.tables WHERE table_schema = 'performance_schema' AND table_name = 'prepared_statements_instances' LIMIT 1;"
-    !performance_schema.empty?
+    performance_schema.count >= 1
   end
 
   def stmt_count
