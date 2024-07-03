@@ -5,14 +5,14 @@ RSpec.describe Mysql2::Statement do
     @client = new_client(encoding: "utf8")
   end
 
-  let(:performance_schema_enabled) do
-    performance_schema = @client.query "SHOW VARIABLES LIKE 'performance_schema'"
-    performance_schema.any? { |x| x['Value'] == 'ON' }
+  let(:prepared_statements_instances_exist) do
+    performance_schema = @client.query "SELECT 1 FROM information_schema.tables WHERE table_schema = 'performance_schema' AND table_name = 'prepared_statements_instances' LIMIT 1;"
+    !performance_schema.empty?
   end
 
   def stmt_count
     # Use the performance schema in MySQL 5.7 and above
-    if performance_schema_enabled
+    if prepared_statements_instances_exist
       @client.query("SELECT COUNT(1) AS count FROM performance_schema.prepared_statements_instances").first['count'].to_i
     else
       # Fall back to the global prepapred statement counter
