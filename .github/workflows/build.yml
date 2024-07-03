@@ -36,28 +36,21 @@ jobs:
       HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK: 1
     steps:
       - uses: actions/checkout@v4
+
       - id: setup-mysql
         uses: shogo82148/actions-setup-mysql@v1
         with:
           mysql-version: ${{ matrix.mysql-version }}
           user: mysql2_test
+      - run: mysql -uroot -e 'CREATE DATABASE IF NOT EXISTS test'
+
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-      - run: |
-          cat <<EOS > spec/configuration.yml
-          root:
-            socket: ${{ steps.setup-mysql.outputs.base-dir }}/tmp/mysql.sock
-            username: root
-            password:
-            database: test
-          
-          user:
-            socket: ${{ steps.setup-mysql.outputs.base-dir }}/tmp/mysql.sock
-            username: mysql2_test
-            password:
-            database: mysql2_test
-          EOS
-      - run: mysql -uroot -e 'CREATE DATABASE IF NOT EXISTS test'
+
+      - run: ln -s ${{ steps.setup-mysql.outputs.base-dir }}/tmp/mysql.sock /tmp/mysql.sock
+        if: ${{ matrix.os == 'ubuntu-latest' }}
       - run: bundle exec rake spec -- $rake_spec_opts
+        env:
+          USER: mysql2_test
